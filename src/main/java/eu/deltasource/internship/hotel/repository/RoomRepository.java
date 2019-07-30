@@ -88,9 +88,14 @@ public class RoomRepository {
      * Returns a copy of the updated item
      */
     public Room updateRoom(Room item) {
-        Room updatedRoom = findById(item.getRoomId());
-        updatedRoom.updateCommodities(item.getCommodities());
-        return new Room(updatedRoom);
+        for (Room room : repository) {
+            if (room.getRoomId() == item.getRoomId()) {
+                room.updateCommodities(item.getCommodities());
+                return new Room(room);
+            }
+        }
+
+        throw new ItemNotFoundException("Room not found in repository!");
     }
 
     /**
@@ -112,8 +117,12 @@ public class RoomRepository {
      * returns false if there's no match and the list is unchanged.
      */
     public boolean deleteById(int id) {
-        Room item = findById(id);
-        return delete(item);
+        for (Room room : repository) {
+            if (room.getRoomId() == id) {
+                return delete(room);
+            }
+        }
+        return false;
     }
 
     /**
